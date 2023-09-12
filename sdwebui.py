@@ -20,7 +20,8 @@ from plugins import *
 @plugins.register(name="sdwebui", desc="利用stable-diffusion webui来画图", version="2.1", author="lanvent")
 class SDWebUI(Plugin):
     create_image_list = []
-    isCreate = False
+    isFullWork = False
+    process_number = 0
 
     def __init__(self):
         super().__init__()
@@ -34,26 +35,31 @@ class SDWebUI(Plugin):
                 self.default_params = defaults["params"]
                 self.default_options = defaults["options"]
                 self.start_args = config["start"]
-                self.prefix = config["prefix"]
+                self.prefixes = config["prefixes"]
+                self.max_number = config["process_number"]
                 self.api = webuiapi.WebUIApi(**self.start_args)
             self.handlers[Event.ON_HANDLE_CONTEXT] = self.on_handle_context
             logger.info("[SD] inited")
         except Exception as e:
             if isinstance(e, FileNotFoundError):
-                logger.warn(
-                    f"[SD] init failed, {config_path} not found")
+                logger.warn(f"[SD] init failed, {config_path} not found")
             else:
-                logger.warn(
-                    "[SD] init failed")
+                logger.warn("[SD] init failed")
             raise e
 
     def on_handle_context(self, e_context: EventContext):
 
         context = e_context["context"]
         content = e_context["context"].content
-        if not content.startswith(self.prefix):
+        flag = False
+        i_prefix = ""
+        for prefix in self.prefixes:
+            if content.startswith(prefix):
+                flag = True
+                i_prefix = prefix
+        if not flag:
             return
-        e_context["context"].content = content.replace(self.prefix, "", 1)
+        e_context["context"].content = content.replace(i_prefix, "", 1)
         context.type = ContextType.IMAGE_CREATE
         channel = e_context['channel']
         if ReplyType.IMAGE in channel.NOT_SUPPORT_REPLYTYPE:
@@ -61,8 +67,10 @@ class SDWebUI(Plugin):
 
         reply = Reply()
         reply.type = ReplyType.TEXT
-        if not self.isCreate:
-            self.isCreate = True
+        if not self.isFullWork:
+            self.process_number += 1
+            if self.process_number > self.max_number:
+                self.isFullWork = True
             self.create_image(e_context)
             reply.content = f"您的作品正在生成中，预计1~10分钟内完成，请耐心等待"
         else:
@@ -98,7 +106,7 @@ class SDWebUI(Plugin):
     #         if len(self.create_image_list) > 0:
     #             self.create_image(self.create_image_list.pop(0))
     #         else:
-    #             self.isCreate = False
+    #             self.isFullWork = False
 
     def __create_image(self, reply: Reply(), e_context: EventContext):
         """
@@ -201,7 +209,8 @@ class SDWebUI(Plugin):
         if len(self.create_image_list) > 0:
             self.create_image(self.create_image_list.pop(0))
         else:
-            self.isCreate = False
+            self.process_number -= 1
+            self.isFullWork = False
 
     def get_help_text(self, verbose=False, **kwargs):
         if not conf().get('image_create_prefix'):
