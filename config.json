@@ -22,7 +22,7 @@
       "denoising_strength": 0.7
     },
     "options": {
-      "sd_model_checkpoint": "majicmixRealistic_v4"
+      "sd_model_checkpoint": "revAnimated_v122"
     }
   },
   "rules": [
