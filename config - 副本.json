@@ -2,7 +2,7 @@
   "start":{
     "host" : "127.0.0.1",
     "port" : 7860,
-    "use_https" : false
+    "use_https" : true
   },
   "defaults": {
     "params": {
@@ -11,8 +11,8 @@
       "width": 512,
       "height": 512,
       "cfg_scale": 7,
-      "prompt":"masterpiece, best quality",
-      "negative_prompt": "(low quality, worst quality:1.4),(bad_prompt:0.8), (monochrome:1.1), (greyscale)",
+      "prompt":"",
+      "negative_prompt": "(worst quality:2), (low quality:2), (normal quality:2), lowres, ((monochrome)), ((grayscale)), bad anatomy,DeepNegative, skin spots, acnes, skin blemishes,(fat:1.2),facing away, looking away,tilted head, lowres,bad anatomy,bad hands, missing fingers,extra digit, fewer digits,bad feet,poorly drawn hands,poorly drawn face,mutation,deformed,extra fingers,extra limbs,extra arms,extra legs,malformed limbs,fused fingers,too many fingers,long neck,cross-eyed,mutated hands,polar lowres,bad body,bad proportions,gross proportions,missing arms,missing legs,extra digit, extra arms, extra leg, extra foot,teethcroppe,signature, watermark, username,blurry,cropped,jpeg artifacts,text,error.",
       "enable_hr": false,
       "hr_scale": 2,
       "hr_upscaler": "Latent",
@@ -20,7 +20,7 @@
       "denoising_strength": 0.7
     },
     "options": {
-      "sd_model_checkpoint": "perfectWorld_v2Baked"
+      "sd_model_checkpoint": "perfectWorld_perfectWorldBakedVAE"
     }
   },
   "rules": [
@@ -53,19 +53,6 @@
         "hr_scale": 1.6
       },
       "desc": "出图分辨率长宽都会提高1.6倍"
-    },
-    {
-      "keywords": [
-        "二次元"
-      ],
-      "params": {
-        "negative_prompt": "(low quality, worst quality:1.4),(bad_prompt:0.8), (monochrome:1.1), (greyscale)",
-        "prompt": "masterpiece, best quality"
-      },
-      "options": {
-        "sd_model_checkpoint": "meinamix_meinaV8"
-      },
-      "desc": "使用二次元风格模型出图"
     }
   ]
 }
