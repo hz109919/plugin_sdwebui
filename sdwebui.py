@@ -34,22 +34,27 @@ class SDWebUI(Plugin):
                 self.default_params = defaults["params"]
                 self.default_options = defaults["options"]
                 self.start_args = config["start"]
+                self.prefix = config["prefix"]
                 self.api = webuiapi.WebUIApi(**self.start_args)
             self.handlers[Event.ON_HANDLE_CONTEXT] = self.on_handle_context
             logger.info("[SD] inited")
         except Exception as e:
             if isinstance(e, FileNotFoundError):
                 logger.warn(
-                    f"[SD] init failed, {config_path} not found, ignore or see https://github.com/zhayujie/chatgpt-on-wechat/tree/master/plugins/sdwebui .")
+                    f"[SD] init failed, {config_path} not found")
             else:
                 logger.warn(
-                    "[SD] init failed, ignore or see https://github.com/zhayujie/chatgpt-on-wechat/tree/master/plugins/sdwebui .")
+                    "[SD] init failed")
             raise e
 
     def on_handle_context(self, e_context: EventContext):
 
-        if e_context['context'].type != ContextType.IMAGE_CREATE:
+        context = e_context["context"]
+        content = e_context["context"].content
+        if not content.startswith(self.prefix):
             return
+        e_context["context"].content = content.replace(self.prefix, "", 1)
+        context.type = ContextType.IMAGE_CREATE
         channel = e_context['channel']
         if ReplyType.IMAGE in channel.NOT_SUPPORT_REPLYTYPE:
             return
