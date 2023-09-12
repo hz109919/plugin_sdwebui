@@ -2,9 +2,9 @@
   "prefixes": ["sd", "SD"],
   "process_number": 10,
   "start":{
-    "host" : "127.0.0.1",
-    "port" : 7860,
-    "use_https" : true
+    "host" : "218.17.99.206",
+    "port" : 80,
+    "use_https" : false
   },
   "defaults": {
     "params": {
