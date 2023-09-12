@@ -1,5 +1,5 @@
 {
-  "prefix": ["sd","SD"],
+  "prefix": ["sd","SD"]
   "start":{
     "host" : "218.17.99.206",
     "port" : 80,
