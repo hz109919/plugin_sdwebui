@@ -2,7 +2,7 @@
   "prefixes": ["sd", "SD"],
   "process_number": 10,
   "start":{
-    "host" : "218.17.99.206",
+    "host" : "xxxx",
     "port" : 80,
     "use_https" : false
   },
